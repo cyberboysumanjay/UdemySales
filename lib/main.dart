@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(MyApp());
@@ -87,8 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     new Container(
                                       child: new Text(
                                         snapshot.data[index].title,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                        style: GoogleFonts.quicksand(),
                                       ),
                                       padding: const EdgeInsets.all(20.0),
                                     ),
