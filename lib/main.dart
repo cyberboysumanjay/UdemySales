@@ -74,25 +74,30 @@ class _MyHomePageState extends State<MyHomePage> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
                               new Card(
-                                child: InkWell(
-                                  onTap: () =>
-                                      launch(snapshot.data[index].link),
-                                  child: new Column(children: [
-                                    new Container(
-                                      padding: EdgeInsets.all(10.0),
-                                      child: Image.network(
-                                        snapshot.data[index].image,
-                                        fit: BoxFit.contain,
+                                child: Padding(
+                                  padding: EdgeInsets.all(5.0),
+                                  child: InkWell(
+                                    onTap: () =>
+                                        launch(snapshot.data[index].link),
+                                    child: new Column(children: [
+                                      new Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: Image.network(
+                                          snapshot.data[index].image,
+                                          fit: BoxFit.fill,
+                                        ),
                                       ),
-                                    ),
-                                    new Container(
-                                      child: new Text(
-                                        snapshot.data[index].title,
-                                        style: GoogleFonts.quicksand(),
+                                      new Container(
+                                        child: new Text(
+                                          snapshot.data[index].title,
+                                          style: GoogleFonts.quicksand(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        padding: const EdgeInsets.all(20.0),
                                       ),
-                                      padding: const EdgeInsets.all(20.0),
-                                    ),
-                                  ]),
+                                    ]),
+                                  ),
                                 ),
                               ),
                             ],
