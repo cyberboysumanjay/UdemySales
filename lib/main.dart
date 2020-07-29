@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 void main() {
   runApp(MyApp());
@@ -32,36 +33,39 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  @override
-  void initState() {
-    super.initState();
-    this.fetchCourses();
-  }
+  Future<List<Courses>> _getCourses() async {
+    final data = await http.get("https://sumanjay.vercel.app/udemy");
+    var jsonData = json.decode((data.body));
+    List<Courses> courses = [];
 
-  List courses = [];
-  Future<String> fetchCourses() async {
-    final response = await http.get("https://sumanjay.vercel.app/udemy");
-
-    setState(() {
-      courses = json.decode(response.body);
-    });
-    return "Success";
+    for (var u in jsonData) {
+      Courses course =
+          Courses(u['description'], u['image'], u['link'], u['title']);
+      courses.add(course);
+    }
+    print(courses.length);
+    return courses;
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Container(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Expanded(
-                child: ListView.builder(
-                    itemCount: courses == null ? 0 : courses.length,
+    return new MaterialApp(
+      title: (widget.title),
+      theme: ThemeData.dark(),
+      home: Scaffold(
+        body: Container(
+          child: FutureBuilder(
+            future: _getCourses(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.data == null) {
+                return Center(
+                    child: SpinKitWave(
+                  color: Colors.red,
+                  size: 30.0,
+                ));
+              } else {
+                return ListView.builder(
+                    itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) {
                       return new Container(
                         child: new Center(
@@ -70,18 +74,19 @@ class _MyHomePageState extends State<MyHomePage> {
                             children: <Widget>[
                               new Card(
                                 child: InkWell(
-                                  onTap: () => launch(courses[index]['link']),
+                                  onTap: () =>
+                                      launch(snapshot.data[index].link),
                                   child: new Column(children: [
                                     new Container(
                                       padding: EdgeInsets.all(10.0),
                                       child: Image.network(
-                                        courses[index]['image'],
+                                        snapshot.data[index].image,
                                         fit: BoxFit.contain,
                                       ),
                                     ),
                                     new Container(
                                       child: new Text(
-                                        courses[index]['title'],
+                                        snapshot.data[index].title,
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -94,11 +99,23 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                       );
-                    }),
-              )
-            ]),
+                    });
+              }
+            },
+          ),
+        ),
       ),
+
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+}
+
+class Courses {
+  final String description;
+  final String image;
+  final String link;
+  final String title;
+
+  Courses(this.description, this.image, this.link, this.title);
 }
