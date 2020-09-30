@@ -8,7 +8,7 @@
 [![Telegram Channel](https://img.shields.io/badge/Telegram-Channel-orange)](https://telegram.dog/sjprojects) [![made-with-flutter](https://img.shields.io/badge/Made%20with-Flutter-1f425f.svg)](https://flutter.dev/) [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=102)](https://github.com/ellerbrock/open-source-badges/) ![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/cyberboysumanjay/UdemySales)
 
 ---
-### Features!
+### Features !
 
 - Get paid udemy courses for free using coupon codes
 - Direct link of paid courses (Coupon code embedded in link)
