@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share/share.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Udemy Sales',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -41,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     for (var u in jsonData) {
       Courses course =
-          Courses(u['description'], u['image'], u['link'], u['title']);
+      Courses(u['description'], u['image'], u['link'], u['title']);
       courses.add(course);
     }
     print(courses.length);
@@ -52,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: (widget.title),
-      theme: ThemeData.dark(),
+      theme: ThemeData.light(),
       home: Scaffold(
         body: Container(
           child: FutureBuilder(
@@ -61,9 +63,9 @@ class _MyHomePageState extends State<MyHomePage> {
               if (snapshot.data == null) {
                 return Center(
                     child: SpinKitWave(
-                  color: Colors.red,
-                  size: 30.0,
-                ));
+                      color: Colors.red,
+                      size: 30.0,
+                    ));
               } else {
                 return ListView.builder(
                     itemCount: snapshot.data.length,
@@ -73,16 +75,22 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: new Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
-                              new Card(
-                                child: Padding(
-                                  padding: EdgeInsets.all(5.0),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 8.0),
+                                child: new Card(
+                                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(14.0),
+                                  ),
+                                  elevation: 8.0,
                                   child: InkWell(
                                     onTap: () =>
                                         launch(snapshot.data[index].link),
                                     child: new Column(children: [
                                       new Container(
                                         width:
-                                            MediaQuery.of(context).size.width,
+                                        MediaQuery.of(context).size.width,
                                         child: Image.network(
                                           snapshot.data[index].image,
                                           fit: BoxFit.fill,
@@ -90,11 +98,44 @@ class _MyHomePageState extends State<MyHomePage> {
                                       ),
                                       new Container(
                                         child: new Text(
-                                          snapshot.data[index].title,
+                                          snapshot.data[index].title
+                                              .replaceAll("[100% OFF]", ""),
                                           style: GoogleFonts.quicksand(
+                                              fontSize: 16,
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        padding: const EdgeInsets.all(20.0),
+                                        padding: const EdgeInsets.fromLTRB(
+                                            20.0, 20.0, 20.0, 5.0),
+                                      ),
+                                      new Container(
+                                        child: new Text(
+                                          snapshot.data[index].description,
+                                          style: GoogleFonts.quicksand(
+                                              fontSize: 10,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                        padding: const EdgeInsets.fromLTRB(
+                                            20.0, 0.0, 20.0, 20.0),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            20.0, 0.0, 20.0, 20.0),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Text("100% OFF",style: TextStyle(fontWeight: FontWeight.bold, color:Colors.green)),
+                                            Spacer(),
+                                            GestureDetector(
+                                              onTap: () {
+                                                print(
+                                                    '${snapshot.data[index].link}');
+                                                Share.share(
+                                                    'Check out this Udemy Course ${snapshot.data[index].link}', subject: '${snapshot.data[index].title}');
+                                              },
+                                              child: Icon(Icons.share,color:Colors.grey,size:20),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ]),
                                   ),
